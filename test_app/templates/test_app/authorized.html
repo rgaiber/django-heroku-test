@@ -1,0 +1,6 @@
+{% if data %}
+<h1>Your Photos</h1>
+	{% for item in data %}
+		<img src={{item.images.thumbnail.url}}>
+	{% endfor %}
+{% endif %}

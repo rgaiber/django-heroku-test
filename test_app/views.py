@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
 
 from instagram.client import InstagramAPI
 
@@ -37,4 +36,13 @@ def authorized(request):
     r = requests.post(url, data=post_fields)
     json = r.json()
     access_token = json['access_token']
-    return HttpResponse('Access token:' + access_token)
+    url = 'https://api.instagram.com/v1/users/self/media/recent/?access_token='
+    url += access_token
+    r = requests.get(url)
+    json = r.json()
+    data = json['data']
+    length = len(data)
+    context = {
+    'data': data
+    }
+    return render(request, 'test_app/authorized.html', context)
