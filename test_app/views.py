@@ -36,5 +36,6 @@ def authorized(request):
     url = 'https://api.instagram.com/oauth/access_token'
     r = requests.post(url, data=post_fields)
     json = r.json()
-    access_token = json['access_token']
+    return HttpResponse('Response: ' + json)
+    access_token =    ['access_token']
     return HttpResponse('Access token:' + access_token)
