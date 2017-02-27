@@ -24,7 +24,7 @@ def authorized(request):
     #TODO: do this in better way, seems hacky
     path = request.path
     host = request.META['HTTP_HOST']
-    redirect_uri = redirect_uri = 'http://' + str(host) + str(path)
+    redirect_uri = request.scheme + '://' + str(host) + str(path)
 
     post_fields = {
         'client_id': client_id,
@@ -36,6 +36,5 @@ def authorized(request):
     url = 'https://api.instagram.com/oauth/access_token'
     r = requests.post(url, data=post_fields)
     json = r.json()
-    return HttpResponse('Response: ' + str(json))
-    access_token =    ['access_token']
+    access_token = json['access_token']
     return HttpResponse('Access token:' + access_token)
