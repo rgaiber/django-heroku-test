@@ -3,20 +3,18 @@ from django.http import HttpResponseRedirect, HttpResponse
 
 import os, requests
 
-client_id = '6e89b63d0f1444faadfdd9f4d198a989'
-client_secret = '279299f3b9d745fca8b7261a64289c8f'
-access_token = None
-
+CLIENT_ID = '6e89b63d0f1444faadfdd9f4d198a989'
+CLIENT_SECRET = '279299f3b9d745fca8b7261a64289c8f'
 REDIRECT_URI = 'redirect_uri'
 ACCESS_TOKEN = 'access_token'
 
-"""Sets the redirect URL after being authorized if necessary"""
+"""Sets the redirect URI based on current URI"""
 def set_redirect_uri(request):
     path = request.path
     host = request.META['HTTP_HOST']
     request.session[REDIRECT_URI] = request.scheme + '://' + str(host) + str(path)
 
-"""Sets access_token which is used when requesting data from the API"""
+"""Sets the access token and stores it to session"""
 def set_access_token(request):
     code = request.GET.get('code')
 
@@ -24,8 +22,8 @@ def set_access_token(request):
         set_redirect_uri(request)
 
     post_fields = {
-        'client_id': client_id,
-        'client_secret': client_secret,
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
         'grant_type': 'authorization_code',
         'redirect_uri': request.session[REDIRECT_URI],
         'code': code
@@ -35,6 +33,8 @@ def set_access_token(request):
     json = r.json()
     request.session[ACCESS_TOKEN] = json['access_token']
 
+"""Gets all photos for the current user and returns collection as 
+data in returned object"""
 def get_current_user_photos(request):
     url = 'https://api.instagram.com/v1/users/self/media/recent/?access_token='
     url += request.session[ACCESS_TOKEN]
@@ -51,7 +51,7 @@ def home(request):
     uri = os.path.join(request.build_absolute_uri(), 'authorized/')
     request.session[REDIRECT_URI] = uri
     url = 'https://api.instagram.com/oauth/authorize/?client_id='
-    url += client_id + '&redirect_uri=' + uri + '&response_type=code'
+    url += CLIENT_ID + '&redirect_uri=' + uri + '&response_type=code'
     return HttpResponseRedirect(url)
 
 def authorized(request):
