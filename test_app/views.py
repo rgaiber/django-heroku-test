@@ -46,17 +46,32 @@ def get_current_user_photos(request):
     }
     return context
 
+"""Gets recent photos tagged in Gunung Rinjani National Park"""
+def get_rinjani_photos(request):
+    location_id = '244017080'
+    url = 'https://api.instagram.com/v1/locations/' + location_id
+    url += '/media/recent?access_token=' + request.session[ACCESS_TOKEN]
+    r = requests.get(url)
+    json = r.json()
+    data = json['data']
+    context = {
+        'data': data,
+        'destination': 'Gunung Rinjani National Park'
+    }
+    return context
+
 # Create your views here.
 def home(request):
     uri = os.path.join(request.build_absolute_uri(), 'authorized/')
     request.session[REDIRECT_URI] = uri
     url = 'https://api.instagram.com/oauth/authorize/?client_id='
-    url += CLIENT_ID + '&redirect_uri=' + uri + '&response_type=code'
+    url += CLIENT_ID + '&redirect_uri=' + uri + '&response_type=code&scope=public_content'
     return HttpResponseRedirect(url)
 
 def authorized(request):
     if ACCESS_TOKEN not in request.session:
         set_access_token(request)
 
-    context = get_current_user_photos(request)
+    context = get_rinjani_photos(request)
+    #context = get_current_user_photos(request)
     return render(request, 'test_app/authorized.html', context)
