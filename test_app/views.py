@@ -48,7 +48,7 @@ def get_current_user_photos(request):
 
 """Gets recent photos tagged in Gunung Rinjani National Park"""
 def get_rinjani_photos(request):
-    location_id = '244017080'
+    location_id = '886917800'
     url = 'https://api.instagram.com/v1/locations/' + location_id
     url += '/media/recent?access_token=' + request.session[ACCESS_TOKEN]
     r = requests.get(url)
@@ -56,7 +56,7 @@ def get_rinjani_photos(request):
     data = json['data']
     context = {
         'data': data,
-        'destination': 'Gunung Rinjani National Park'
+        'destination': 'Torres Del Paine'
     }
     return context
 
@@ -71,7 +71,8 @@ def home(request):
 def authorized(request):
     if ACCESS_TOKEN not in request.session:
         set_access_token(request)
+    return HttpResponseRedirect('/viewDestinations/')
 
+def view_destinations(request):
     context = get_rinjani_photos(request)
-    #context = get_current_user_photos(request)
-    return render(request, 'test_app/authorized.html', context)
+    return render(request, 'test_app/viewDestinations.html', context)
