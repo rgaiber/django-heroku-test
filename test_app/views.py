@@ -27,19 +27,17 @@ def view_destinations(request):
     if request.method == constants.GET:
         form = DestinationSelectionForm(request.GET)
         if form.is_valid():
-            form.destination_name = request.GET.get('destination_name')
-            context = retriever.get_destination_list(request, form.destination_name)
+            context = retriever.get_destination_list(request, form.cleaned_data['destination_name'])
     else:
         form = DestinationSelectionForm()
     context['form'] = form
 
+    return render(request, 'test_app/viewDestinations.html', context)
 
+def view_photos(request, destination_id, destination_name):
+    retriever = RetrieveInstagramData()
+    context = retriever.get_photos(request, destination_name, destination_id)
+    form = DestinationSelectionForm(request.GET)
+    context['form'] = form
 
-
-
-    """context = {
-        'destinationSelected': retriever.select_destination
-    }
-
-    context = retriever.get_photos(request, 'Torres del Paine', '886917800')"""
     return render(request, 'test_app/viewDestinations.html', context)

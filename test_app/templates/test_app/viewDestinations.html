@@ -1,21 +1,24 @@
 <h1>View Destination Photos</h1>
 <form action='/viewDestinations/' method='get'>
-	{% csrf_token %}
-	{{form}}
-	<input type='submit' value='Search' />
+    {% csrf_token %}
+    {{form}}
+    <input type='submit' value='Search' />
 </form>
 
 {% if destination_list %}
-	{% for item in destination_list %}
-		<div name='{{item.id}}'>{{item.name}}</div>
-	{% endfor %}
+    <div name='destination'>
+        {% for item in destination_list %}
+            <a href="/viewPhotos/{{item.id}}/{{item.name}}/">{{item.name}}</a>
+            <br />
+        {% endfor %}
+    </div>
 {% endif %}
 
-<!-- {% if images %}
-<h1>{{destination}}</h1>
-{% for item in data %}
-	<img src={{item.images.thumbnail.url}}>
-{% endfor %}
+{% if images %}
+    <h1>{{destination}}</h1>
+    {% for item in images %}
+        <img src={{item.images.thumbnail.url}}>
+    {% endfor %}
 {% else %}
-<h1>No Results Available For {{destination}}</h1>
-{% endif %} -->
+    <h1>No Results Available For {{destination}}</h1>
+{% endif %}
