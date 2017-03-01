@@ -8,7 +8,7 @@
 {% if destination_list %}
     <div name='destination'>
         {% for item in destination_list %}
-            <a href="/viewPhotos/{{item.id}}/{{item.name}}/">{{item.name}}</a>
+            <a href="{% url 'test_app:view_photos' item.id item.name %}">{{item.name}}</a>
             <br />
         {% endfor %}
     </div>
