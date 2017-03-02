@@ -1,5 +1,5 @@
 <h1>View Destination Photos</h1>
-<form action='/viewDestinations/' method='get'>
+<form action='/viewDestinations/' method='post'>
     {% csrf_token %}
     {{form}}
     <input type='submit' value='Search' />
@@ -19,6 +19,4 @@
     {% for item in images %}
         <img src={{item.images.thumbnail.url}}>
     {% endfor %}
-{% else %}
-    <h1>No Results Available For {{destination}}</h1>
 {% endif %}

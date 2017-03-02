@@ -5,3 +5,6 @@ ACCESS_TOKEN = 'access_token'
 
 POST = 'POST'
 GET = 'GET'
+
+DESTINATION_NAME = 'destination_name'
+FORM = 'form'

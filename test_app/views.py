@@ -24,20 +24,25 @@ def view_destinations(request):
     context = {}
     # if the user entered text, populate the dropdown with completed destination options
     # for them to select from
-    if request.method == constants.GET:
-        form = DestinationSelectionForm(request.GET)
+    if request.method == constants.POST:
+        form = DestinationSelectionForm(request.POST)
         if form.is_valid():
-            context = retriever.get_destination_list(request, form.cleaned_data['destination_name'])
+            context = retriever.get_destination_list(request, form.cleaned_data[constants.DESTINATION_NAME])
+            request.session[constants.DESTINATION_NAME] = form.cleaned_data[constants.DESTINATION_NAME]
     else:
         form = DestinationSelectionForm()
-    context['form'] = form
+    context[constants.FORM] = form
 
     return render(request, 'test_app/viewDestinations.html', context)
 
 def view_photos(request, destination_id, destination_name):
+    if constants.DESTINATION_NAME in request.session:
+        name = request.session[constants.DESTINATION_NAME]
+    else:
+        name = ''
     retriever = RetrieveInstagramData()
     context = retriever.get_photos(request, destination_name, destination_id)
-    form = DestinationSelectionForm(request.GET)
-    context['form'] = form
+    form = DestinationSelectionForm({constants.DESTINATION_NAME: name})
+    context[constants.FORM] = form
 
     return render(request, 'test_app/viewDestinations.html', context)
